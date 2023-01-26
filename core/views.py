@@ -1,4 +1,5 @@
 import random
+import re
 from itertools import chain
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
@@ -253,17 +254,37 @@ def signup(request):
         password = request.POST['password']
         password2 = request.POST['password2']
 
-        # Controle de username déjà existant
+        # Controle username
+        if username == '' or username is None:
+            messages.error(request, "Veuillez indiquer un nom d'utilisateur.")
+            return redirect('signup')
+        if len(username) < 3:
+            messages.error(request, "Le nom d'utilisateur doit comporter au minimum 3 caractères.")
+            return redirect('signup')
         if User.objects.filter(username=username).exists():
-            messages.info(request, "Ce nom d'utilisateur est déjà pris")
+            messages.error(request, "Ce nom d'utilisateur est déjà pris.")
             return redirect('signup')
-        # Controle de email déjà existant
+
+        # Controle email
+        if email == '' or email is None:
+            messages.error(request, "Veuillez indiquer un email.")
+            return redirect('signup')
+        if not validate_email_address(email):
+            messages.error(request, "L'e-mail n'est pas valide.")
+            return redirect('signup')
         if User.objects.filter(email=email).exists():
-            messages.info(request, "Cet e-mail est déjà pris")
+            messages.error(request, "Cet e-mail est déjà pris.")
             return redirect('signup')
-        # Controle égalité des 2 mots de passe
+
+        # Controle password
+        if password == '' or password is None:
+            messages.error(request, "Veuillez indiquer un mot de passe.")
+            return redirect('signup')
+        if not validate_password(password):
+            messages.error(request, "Le mot de passe doit contenir au minimum 8 caractères, au moins une majuscule, une minuscule, un chiffre et un caractère spécial.")
+            return redirect('signup')
         if password != password2:
-            messages.info(request, "Les mots de passe sont différents")
+            messages.error(request, "Les mots de passe sont différents.")
             return redirect('signup')
 
         # Création de l'utilisateur
@@ -326,3 +347,13 @@ def logout(request):
 
     # Je retourne sur l'index
     return redirect('signin')
+
+
+def validate_email_address(email_address):
+    # Validation email REGEX
+    return re.search(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+', email_address)
+
+
+def validate_password(password):
+    # Validation email REGEX
+    return re.search(r'(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}', password)
