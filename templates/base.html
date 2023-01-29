@@ -115,7 +115,13 @@
 
                         <!-- profile -->
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#"
+                               class="nav-link"
+                               id="navbarScrollingDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false"
+                            >
                                 {% if user.is_authenticated %}
                                     <img src="{% static 'images/avatars/avatar_full_32.png' %}" class="header-avatar" alt="profile-image">
                                 {% else %}
