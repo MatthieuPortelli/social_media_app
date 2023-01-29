@@ -745,6 +745,13 @@ header.sticky {
 .feature-photo > figure img {
     display: inline-block;
     width: 100%;
+    height: 250px;
+}
+
+@media all and (max-width: 768px) {
+    .feature-photo > figure img {
+        height: 100px;
+    }
 }
 
 .user-avatar {
@@ -755,7 +762,6 @@ header.sticky {
     border-left-color: pink;
     box-shadow: 0 1px 0 pink;
     float: right;
-    margin-top: -168px;
     overflow: hidden;
     position: relative;
     width: 100%;
@@ -1104,7 +1110,6 @@ header.sticky {
     font-size: 14px;
     padding: 4px 20px;
     border: 1px solid pink;
-    background-color: pink !important;
 
 }
 
@@ -1267,7 +1272,6 @@ header.sticky {
     box-shadow: 0 0 12px 2px rgba(0, 0, 0, .5);
     display: inline-block;
     width: 100%;
-    height: 121.3vh;
     overflow-x: scroll !important;
     margin-bottom: 20px;
     padding: 25px;
@@ -7247,7 +7251,6 @@ ul.offcanvas-menu ul {
 
 .info {
     float: left;
-    padding-left: 73px;
     width: 100%;
 }
 
@@ -10037,4 +10040,35 @@ aside.sidebar.full-style {
     text-transform: uppercase;
 }
 
+/* COOKIE */
+#cookie {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
 
+.cookie-consent-modal {
+    width: 30vw;
+    margin: 0 5px 50px 0;
+    z-index: 999;
+    display: none;
+}
+
+@media all and (max-width: 992px) {
+    .cookie-consent-modal {
+        margin: 0 20px 50px 20px;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .cookie-consent-modal {
+        width: 100vw;
+        right: unset;
+        left: unset;
+        margin: 0 0 80px 0;
+    }
+}
+
+.cookie-consent-modal.active {
+    display: flex;
+}

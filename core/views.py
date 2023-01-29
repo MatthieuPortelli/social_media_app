@@ -1,10 +1,13 @@
 import random
 import re
 from itertools import chain
+
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .forms import SignUpForm
 from .models import Profile, Post, LikePost, FollowersCount
 
 
@@ -49,16 +52,19 @@ def index(request):
     # Je récupère le current user pour l'enlever de la liste des suggestions (liste finale = tout le monde - ceux que je follow - moi)
     current_user = User.objects.filter(username=request.user.username)
     final_suggestions_list = [x for x in list(new_suggestions_list) if x not in list(current_user)]
+    # Je récupère le superuser car je ne veux pas qu'il apparaisse dans la liste
+    superusers = User.objects.filter(is_superuser=True)
+    final_suggestions_list_without_superusers = [x for x in list(final_suggestions_list) if x not in list(superusers)]
 
     # Je mélange le tout de manière aléatoire
-    random.shuffle(final_suggestions_list)
+    random.shuffle(final_suggestions_list_without_superusers)
 
     # J'initie deux listes
     username_profile = []
     username_profile_list = []
 
     # Dans une liste je mets les id des username identifiés dans ma liste finale
-    for users in final_suggestions_list:
+    for users in final_suggestions_list_without_superusers:
         username_profile.append(users.id)
 
     # Pour toutes les id que j'ai récupéré
@@ -109,6 +115,8 @@ def search(request):
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
 
+    username_profile_list_without_superusers = []
+
     if request.method == 'POST':
         # Je récupère le username envoyé par le formulaire
         username = request.POST['username']
@@ -132,13 +140,27 @@ def search(request):
 
         # Je compile toutes les listes en une seule et je passe dans le render
         username_profile_list = list(chain(*username_profile_list))
+        # Je retire <Profile: admin> de ma liste car je ne veux pas faire apparaitre ce profil
+        profile_admin = Profile.objects.filter(id_user=1)
+        username_profile_list_without_superusers = [x for x in list(username_profile_list) if x not in list(profile_admin)]
 
-    return render(request, 'search.html', {'user_profile': user_profile, 'username_profile_list': username_profile_list})
+    # # Je récupère le nombre de followers pour chaque Profile
+    # for profile_followers in username_profile_list_without_superusers:
+    #     user_followers = len(FollowersCount.objects.filter(user=profile_followers))
+
+    context = {
+        'user_profile': user_profile,
+        'username_profile_list': username_profile_list_without_superusers,
+    }
+
+    return render(request, 'search.html', context)
 
 
 @login_required(login_url='signin')
 def profile(request, profile_pk):
-    # Récupération du user
+    # Récupération du user current
+    current_user = request.user
+    # Récupération du user profile_pk
     user_object = User.objects.get(username=profile_pk)
     # Récupération du Profile du user
     user_profile = Profile.objects.get(user=user_object)
@@ -163,6 +185,7 @@ def profile(request, profile_pk):
 
     # Définition du context que je ferai passer à la view pour accéder aux attributs des objets
     context = {
+        'current_user': current_user,
         'user_object': user_object,
         'user_profile': user_profile,
         'user_posts': user_posts,
@@ -171,6 +194,7 @@ def profile(request, profile_pk):
         'user_followers': user_followers,
         'user_following': user_following,
     }
+
     return render(request, 'profile.html', context)
 
 
@@ -210,9 +234,10 @@ def upload(request):
         new_post = Post.objects.create(user=user, image=image, caption=caption)
         new_post.save()
 
-        return redirect('/')
+        # Redirection sur la page en cours
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        return redirect('/')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required(login_url='signin')
@@ -251,7 +276,7 @@ def signup(request):
         # Je récupère les valeurs des inputs
         username = request.POST['username']
         email = request.POST['email']
-        password = request.POST['password']
+        password1 = request.POST['password1']
         password2 = request.POST['password2']
 
         # Controle username
@@ -277,33 +302,45 @@ def signup(request):
             return redirect('signup')
 
         # Controle password
-        if password == '' or password is None:
+        if password1 == '' or password1 is None:
             messages.error(request, "Veuillez indiquer un mot de passe.")
             return redirect('signup')
-        if not validate_password(password):
+        if not validate_password(password1):
             messages.error(request, "Le mot de passe doit contenir au minimum 8 caractères, au moins une majuscule, une minuscule, un chiffre et un caractère spécial.")
             return redirect('signup')
-        if password != password2:
+        if password1 != password2:
             messages.error(request, "Les mots de passe sont différents.")
             return redirect('signup')
 
-        # Création de l'utilisateur
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.save()
+        form = SignUpForm(request.POST)
 
-        # Connection de l'utilisateur
-        user_login = auth.authenticate(username=username, password=password)
-        auth.login(request, user_login)
+        if form.is_valid():
+            # Création de l'utilisateur
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            user.save()
 
-        # Création d'un objet Profile pour le nouvel utilisateur
-        user_model = User.objects.get(username=username)
-        new_profile = Profile.objects.create(user=user_model, id_user=user_model.id)
-        new_profile.save()
+            # Connection de l'utilisateur
+            user_login = auth.authenticate(username=username, password=password1)
+            auth.login(request, user_login)
 
-        # Redirection sur l'accueil
-        return redirect('/')
+            # Création d'un objet Profile pour le nouvel utilisateur
+            user_model = User.objects.get(username=username)
+            new_profile = Profile.objects.create(user=user_model, id_user=user_model.id)
+            new_profile.save()
 
-    return render(request, 'signup.html')
+            # Redirection sur l'accueil
+            return redirect('/')
+        else:
+            print('INVALID')
+            messages.error(request, "Veuillez cocher la case reCAPTCHA.")
+    else:
+        form = SignUpForm()
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'signup.html', context)
 
 
 def signin(request):

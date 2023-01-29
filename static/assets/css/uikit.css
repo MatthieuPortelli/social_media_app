@@ -4858,7 +4858,7 @@ ul.uk-nav-sub {
   /* 6 */
   opacity: 0;
   transition: opacity 0.15s linear;
-  background-color: cyan;
+  background-color: rgb(0 0 0 / 0.5);
 }
 /*
  * Open

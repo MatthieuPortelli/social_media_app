@@ -1,79 +1,33 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static 'assets/images/favicon.png' %}" rel="icon" type="image/png">
-    <title>Connexion - SocialMediaApp</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
-</head>
+{% block content %}
 
-<body class="bg-gray-100">
-    <div id="wrapper" class="flex flex-col justify-between h-screen">
+<!-- CONTENT-->
+<div class="container mt-3 mt-md-5">
+    <div class="mx-auto" style="max-width: 400px;">
+        <h1 class="lg:text-3xl text-xl font-semibold mb-6">Connexion</h1>
 
-        <!-- HEADER-->
-        <div class="bg-white py-4 shadow dark:bg-gray-800">
-            <div class="max-w-6xl mx-auto">
-                <div class="flex items-center lg:justify-between justify-around">
-                    <a href="{% url 'index' %}">
-                        <b><h1 style="font-size: 1.5rem;">SocialMediaApp</h1></b>
-                    </a>
-
-                    <!-- signin -->
-                    <div class="capitalize flex font-semibold hidden lg:block my-2 space-x-3 text-center text-sm">
-                        <a href="{% url 'signup' %}" class="bg-pink-500 pink-500 px-6 py-3 rounded-md shadow text-white">Inscription</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CONTENT-->
+        <!-- error messages -->
         <div>
-            <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
-                <h1 class="lg:text-3xl text-xl font-semibold  mb-6">Connexion</h1>
-
-                <!-- error messages -->
-                <div>
-                    {% for message in messages %}
-                        <h5 style="color: red;">{{ message }}</h5>
-                    {% endfor %}
-                </div>
-
-                <!-- signin form -->
-                <form action="" method="POST">
-                    {% csrf_token %}
-
-                    <input type="text" name="username" placeholder="Nom d'utilisateur" class="bg-gray-200 mb-2 shadow-none dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                    <input type="password" name="password" placeholder="Mot de passe" class="bg-gray-200 mb-2 shadow-none dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
-                    <button type="submit" class="bg-gradient-to-br from-pink-500 py-3 rounded-md text-white text-xl to-red-400 w-full">Connexion</button>
-
-                    <div class="text-center mt-5 space-x-2">
-                        <p class="text-base">Tu n'as pas encore de compte ? <a href="{% url 'signup' %}" class=""><b>Inscription</b></a></p>
-                    </div>
-                </form>
-            </div>
+            {% for message in messages %}
+                <h5 style="color: red;">{{ message }}</h5>
+            {% endfor %}
         </div>
-        
-        <!-- FOOTER -->
-        <div class="lg:mb-5 py-3 uk-link-reset">
-            <div class="flex flex-col items-center justify-between lg:flex-row max-w-6xl mx-auto lg:space-y-0 space-y-3">
-                <p class="capitalize" style="margin: auto;">© copyright 2023 | SocialMediaApp</p>
+
+        <!-- signin form -->
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Nom d'utilisateur" class="mb-2" style="border: 1px solid #d3d5d8 !important;">
+            <input type="password" name="password" placeholder="Mot de passe" class="mb-2" style="border: 1px solid #d3d5d8 !important;">
+            <button type="submit" class="bg-gradient-to-br from-pink-500 py-3 rounded-md text-white text-xl to-red-400 w-full">Connexion</button>
+
+            <div class="text-center mt-3 space-x-2">
+                <p class="text-base text-gray-600">Tu n'as pas encore de compte ? <a href="{% url 'signup' %}" class=""><b>Inscription</b></a></p>
             </div>
-        </div>
+        </form>
     </div>
+    <br>
+</div>
 
-    <!-- SCRIPTS -->
-    <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'assets/js/uikit.js' %}"></script>
-    <script src="{% static 'assets/js/simplebar.js' %}"></script>
-    <script src="{% static 'assets/js/custom.js' %}"></script>
-</body>
-</html>
+{% endblock %}

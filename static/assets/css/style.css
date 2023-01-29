@@ -568,7 +568,7 @@ textarea {
   height: auto;
   line-height: 27px;
   padding: 20px;
-  min-height: 130px;
+  min-height: 100px;
   -webkit-transition: none !important;
   transition: none !important;
   min-width: 100%;
@@ -1288,7 +1288,6 @@ strong {
 @media (min-width: 1024px) {
   .container {
     max-width: 900px !important;
-    padding-top: 45px;
   }
 }
 
@@ -1298,11 +1297,13 @@ strong {
   }
 }
 
+/*
 @media (max-width: 992px) {
   .container {
     padding: 105px 20px !important;
   }
 }
+*/
 
 .custom-overly1 {
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(black));
@@ -1782,7 +1783,7 @@ header .header_inner .right-side .header-avatar {
   --tw-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
           box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  padding: 20px;
+  padding: 15px;
   display: none;
 }
 
@@ -1867,7 +1868,7 @@ header .uk-dropdown {
   }
   .header_dropdown {
     left: auto !important;
-    right: -20px !important;
+    right: 0px !important;
     width: 100vw;
     max-width: 400px !important;
   }

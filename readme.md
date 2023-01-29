@@ -2,19 +2,9 @@
 
 ## Templates (TODO)
 - Index  
-  - Mettre en place des blocks content (mêmes header et footer sur toutes les view)  
-  - Trouver un logo  
-  - Position du texte bouton 'Créer'  
-  - Gérer le format des images dans les publications  
-  - Version mobile (le site n'est pas responsive)  
-- Profile
-  - Bouton 'Paramètres' (si c'est le profil de l'utilisateur connecté)
-  - Intégration de nom / bio / localisation  
-  - Gérer le format des images dans la liste des publications  
-- Search  
-  - Intégration de la liste des profils  
-- Setting  
-  - Intégration du bloc des paramètres
+  - Version mobile  
+  - Mettre un like refresh la page  
+  - Navbar en mobile, bloc utilisateur  
 
 ## Fonctionnalités
 [x] S'inscrire, se connecter, se déconnecter  
@@ -30,10 +20,7 @@
 ## Pistes d'améliorations
 - Index
   - Pouvoir commenter une publication
-  - Mettre en place des hashtag
-- Signup
-  - REGEX de contrôle de l'adresse email
-  - Complexité du mot de passe
-  - Gestion des cookies
-- Profile
-  - Pouvoir changer la photo de couverture et de profil 
+  - Mettre en place des hashtag  
+  - Une page avec tous les profils (partant de l'index avec 'Voir tous')
+- Profile  
+  - Pouvoir changer la photo de couverture  

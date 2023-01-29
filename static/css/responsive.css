@@ -4,9 +4,6 @@
     .edit-phto {
         left: 369px;
     }
-    .user-avatar {
-        margin-top: -225px;
-    }
     #people-list figure {
         width: 14.7%;
     }
@@ -37,9 +34,6 @@
 }
 
 @media screen and (max-width: 1600px) and (min-width: 1400px) {
-    .user-avatar {
-        top: -33px;
-    }
     #people-list figure {
         width: 18.5%;
     }
@@ -48,9 +42,6 @@
     }
     .edit-phto {
         left: 315px;
-        bottom: 125px;
-    }
-    .add-btn {
         bottom: 125px;
     }
 }
@@ -618,12 +609,6 @@
     .feature-photo > figure {
         margin-bottom: 10px;
     }
-    .user-avatar {
-        border: medium none;
-        border-radius: 0;
-        width: 85%;
-        margin: 10px 0;
-    }
     .fileContainer {
         font-size: 10px;
     }
@@ -1127,11 +1112,6 @@
         max-width: 48.4%;
         min-width: 48.4%;
         width: 48.4%;
-    }
-    .user-avatar {
-        border: 4px solid #dfdfdf;
-        margin-bottom: 10px;
-        width: 45%;
     }
     .add-btn {
         top: 70px;

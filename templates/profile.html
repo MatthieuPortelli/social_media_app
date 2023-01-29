@@ -1,211 +1,117 @@
+{% extends "base.html" %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <link href="favicon.png" rel="icon" type="image/png">
-	<title>Profil - {{ user_profile.user.username }}</title>
-    <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/color.css' %}">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-<body>
-	<div class="theme-layout"></div>
+{% block content %}
 
-	<!-- HEADER -->
-    <header>
-        <div class="header_inner">
-            <!-- SEARCH FORM -->
-            <form action="/search/" method="POST">
-                {% csrf_token %}
+<!-- TOP -->
+<div class="feature-photo">
+	<!-- cover picture -->
+	<figure><img src="{% static 'images/resources/timeline-1.jpg' %}" alt="cover-image"></figure>
 
-                <!-- LEFT SIDE -->
-                <div class="left-side">
-                    <!-- logo -->
-                    <div id="logo" class="">
-                        <a href="/">
-                            <b><h1 style="text-transform: uppercase;">Social Media App</h1></b>
-                        </a>
-                    </div>
-
-                    <!-- inputs -->
-                    <input type="text" name="username" placeholder="Rechercher">&nbsp; &nbsp;
-                    <button type="submit"><i class="fa fa-search fa-1x"></i></button>
-                </div>
-            </form>
-
-            <!-- RIGHT SIDE -->
-            <div class="right-side lg:pr-4">
-                <!-- welcome user -->
-                <a href="/profile/{{ user_profile }}" class="">
-                    Bienvenue <b name="" class="">{{user.username}}&nbsp; &nbsp; &nbsp;</b>
-                </a>
-
-                <!-- profile -->
-                <a href="#">
-                    <img src="{{ user_profile.profile_img.url }}" class="header-avatar" alt="profile-image">
-                </a>
-
-                <!-- dropdown -->
-                <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
-                    <ul>
-                        <li><a href="{% url 'settings' %}">Paramètres</a></li>
-
-                        {% if user.is_authenticated %}
-                            {% if user.is_superuser %}
-                                <li><a href="{% url 'admin:index' %}">Administration</a></li>
-                            {% endif %}
-
-                            <li><a href="{% url 'logout' %}">Déconnexion</a></li>
-                        {% else %}
-                            <li><a href="{% url 'signin' %}">Connexion</a></li>
-                            <li><a href="{% url 'signup' %}">Inscription</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
-	<!-- TOP SECTION -->
-	<section>
-		<div class="feature-photo">
-			<!-- cover picture -->
-			<figure><img src="{% static 'images/resources/timeline-1.jpg' %}" alt="cover-image" style="height: 250px"></figure>
-
-			<form action="/follow/" method="POST">
-				{% csrf_token %}
-
-				<div class="add-btn">
-					<!-- numbers -->
-					{% if user_post_length == 0 or user_post_length == 1 %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_post_length }} publication</b></span>
-					{% else %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_post_length }} publications</b></span>
-					{% endif %}
-
-					{% if user_followers == 0 or user_followers == 1 %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_followers }} follower</b></span>
-					{% else %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_followers }} followers</b></span>
-					{% endif %}
-
-					{% if user_following == 0 or user_following == 1 %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_following }} suivi(e)</b></span>
-					{% else %}
-						<span style="color: white; font-size: 27px;"><b>{{ user_following }} suivi(e)s</b></span>
-					{% endif %}
-
-					<!-- follow / unfollow -->
-					<input type="hidden" name="follower" value="{{ user.username }}">
-					<input type="hidden" name="user" value="{{ user_object.username }}">
-
-					{% if user_object.username == user.username %}
-						<a href="{% url 'settings' %}">
-							<button style="background-color: #ffc0cb; border: #ffc0cb;">Paramètres</button>
-						</a>
-					{% else %}
-						<a data-ripple="">
-							<button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{ button_text }}</button>
-						</a>
-					{% endif %}
-				</div>
-			</form>
-
-			<div class="container-fluid">
-				<div class="row merged">
+	<div class="container p-3 bg-white rounded shadow-lg">
+		<div class="">
+			<div class="row justify-content-between align-items-center">
+				<div class="col-4 col-sm-3 col-md-2 d-flex justify-content-md-start">
 					<!-- profile picture -->
-					<div class="col-lg-2 col-sm-3">
-						<div class="user-avatar">
-							<figure>
-								<img src="{{ user_profile.profile_img.url }}" style="height: 250px; width: 100%; background-color: white;" alt="profile-image">
-							</figure>
-						</div>
-					</div>
-
-					<!-- profile name -->
-					<div class="col-lg-10 col-sm-9">
-						<div class="timeline-info">
-							<ul>
-								<li class="admin-name">
-									<h5 style="color: black;white-space: nowrap; width: 110px; font-size: 27px;">
-										<b>@{{ user_profile.user.username }}</b>
-									</h5>
-								</li>
-
-                                <li>
-                                    <div class="bio">
-                                        <b>{{ user_profile.bio }}</b>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="location">
-                                        <b>{{ user_profile.location }}</b>
-                                    </div>
-                                </li>
-							</ul>
-						</div>
+					<div class="user-avatar w-24 h-24">
+						<figure>
+							<img src="{{ user_profile.profile_img.url }}" alt="profile-image">
+						</figure>
 					</div>
 				</div>
-			</div>
-		</div>
-	</section>
 
-	<!-- POSTS SECTION -->
-	<section>
-		<div class="gap gray-bg">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="row" id="page-contents">
-							<div class="col-lg-3">
-								<aside class="sidebar static" style="background-color: transparent;"></aside>
-							</div>
+				<div class="col-8 col-sm-9 col-md-10">
+					<div class="container">
+						<!-- form -->
+						<form action="/follow/" method="POST">
+							{% csrf_token %}
 
-							<!-- posts -->
-							<div class="col-lg-6">
-								<div class="central-meta">
-									<ul class="photos">
-										{% for post in user_posts %}
-											<li>
-												<a class="strip" href="{{ post.image.url }}" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
-													<img src="{{ post.image.url }}" style="height: 250px; width: 300px;" alt="post-image">
-												</a>
-											</li>
-										{% endfor %}
-									</ul>
+							<div class="row d-flex justify-content-between align-items-center text-center">
+								<div class="">
+									<!-- numbers -->
+									{% if user_post_length == 0 or user_post_length == 1 %}
+										<span class="text-xl"><b>{{ user_post_length }} publication</b></span>
+									{% else %}
+										<span class="text-xl"><b>{{ user_post_length }} publications</b></span>
+									{% endif %}
+								</div>
+								<div class="3">
+									{% if user_followers == 0 or user_followers == 1 %}
+										<span class="text-xl"><b>{{ user_followers }} follower</b></span>
+									{% else %}
+										<span class="text-xl"><b>{{ user_followers }} followers</b></span>
+									{% endif %}
+								</div>
+								<div class="">
+									{% if user_following == 0 or user_following == 1 %}
+										<span class="text-xl"><b>{{ user_following }} suivi(e)</b></span>
+									{% else %}
+										<span class="text-xl"><b>{{ user_following }} suivi(e)s</b></span>
+									{% endif %}
+								</div>
+								<div class="">
+									<!-- follow / unfollow -->
+									<input type="hidden" name="follower" value="{{ user.username }}">
+									<input type="hidden" name="user" value="{{ user_object.username }}">
+
+									{% if user_object.username == current_user.username %}
+										<a href="{% url 'settings' %}">
+											<button class="btn bg-gradient-to-br from-pink-500 to-red-400 text-white">Paramètres</button>
+										</a>
+									{% else %}
+										<a data-ripple="" class="bg-gradient-to-br from-pink-500 to-red-400">
+											<button type="submit" class="btn bg-gradient-to-br from-pink-500 to-red-400 text-white text-lg md:text-2xl">{{ button_text }}</button>
+										</a>
+									{% endif %}
 								</div>
 							</div>
-
-							<div class="col-lg-3">
-								<aside class="sidebar static" style="background-color: transparent;"></aside>
-							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	</section>
 
-	<!-- SCRIPTS -->
-	<script data-cfasync="false" src="{% static '../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script><script src="{% static 'js/main.min.js' %}"></script>
-	<script src="{% static 'js/script.js' %}"></script>
-	<script src="{% static 'assets/js/tippy.all.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
-    <script src="{% static 'assets/js/uikit.js' %}"></script>
-    <script src="{% static 'assets/js/simplebar.js' %}"></script>
-    <script src="{% static 'assets/js/custom.js' %}"></script>
-    <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
-</body>
-</html>
+		<div class="bg-gradient-to-br from-pink-500 to-red-400 rounded mt-3">
+			<div class="row d-flex justify-content-around align-items-center text-center p-1">
+				<!-- profile name -->
+				<div class="user-info">
+					<p class="text-white text-lg md:text-2xl">@{{ user_profile.user.username }}</p>
+				</div>
+				<p class="text-white d-none d-md-block">|</p>
+				<div class="user-info">
+					<p class="text-white pl-4 md:pl-0">{{ user_profile.bio }}</p>
+				</div>
+				<p class="text-white d-none d-md-block">|</p>
+				<div class="user-info">
+					<p class="text-white">{{ user_profile.location }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- POSTS -->
+<div class="container mt-3 mb-5 bg-white rounded">
+		<!-- posts -->
+	{% if user_posts %}
+		<div class="row mb-5 py-2">
+			{% for post in user_posts %}
+				<div class="col-12 col-md-4 d-flex align-items-center justify-content-center my-1">
+					<div class="border border-dark">
+						<a class="" href="{{ post.image.url }}" target="_blank">
+							<img src="{{ post.image.url }}" alt="post-image">
+						</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	{% else %}
+		<div class="mx-auto mt-5">
+			<h2 class="text-3xl font-bold text-center">Vous n'avez pas encore de publication !</h2>
+			<p class="text-center text-gray-600 mt-3">En cliquant sur <b>Créer</b> vous pourrez faire votre première publication.</p>
+		</div>
+	{% endif %}
+</div>
+
+{% endblock %}
