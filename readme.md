@@ -3,7 +3,6 @@
 ## Templates (TODO)
 - Index  
   - Version mobile  
-  - Mettre un like refresh la page  
   - Navbar en mobile, bloc utilisateur  
 
 ## Fonctionnalités
